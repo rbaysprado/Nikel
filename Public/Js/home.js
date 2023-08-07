@@ -18,7 +18,7 @@ document.getElementById("transaction-form").addEventListener("submit", function(
     const value = parseFloat(document.getElementById("value-input").value);
     const description = document.getElementById("description-input").value;
     const date = document.getElementById("date-input").value;
-    const type = document.querySelector('input[name="type-input"]:checked').value;
+    const type = document.querySelector('input[name="inlineRadioOptions"]:checked').value;
 
     data.transactions.unshift({
         value: value, type: type, description: description, date: date
@@ -69,11 +69,15 @@ function loggout() {
 function getCashIn() {
     const transactions = data.transactions;
 
-    const cashIn = transactions.forEach.filter((item) => item.type === "1");
+    if (!transactions || transactions.length == 0) return
+
+    const cashIn = Array.from(transactions).filter((item) => item.type === "1");
+
+    let limit = 0;
+
+    let cashInHtml = ``;
 
     if(cashIn.length) {
-        let cashInHtml = ``;
-        let limit = 0;
 
         if(cashIn.length > 5) {
             limit = 5;
@@ -109,12 +113,16 @@ function getCashIn() {
 
     function getCashOut() {
         const transactions = data.transactions;
+
+        if (!transactions || transactions.length == 0) return
     
-        const cashIn = transactions.forEach.filter((item) => item.type === "2");
-    
+        const cashIn = Array.from(transactions).filter((item) => item.type === "2");
+        
+        let cashInHtml = ``;
+
+        let limit = 0;
+        
         if(cashIn.length) {
-            let cashInHtml = ``;
-            let limit = 0;
     
             if(cashIn.length > 5) {
                 limit = 5;
@@ -153,14 +161,15 @@ function getTotal() {
 
     transaction.forEach((item) => {
         if(item.type === "1") {
-            total += item.value;
+            getTotal += item.value;
         } else {
-            total -=item.value;
+            getTotal -=item.value;
         }
         
     })
 
-    document.getElementById("total").innerHTML = `R$ ${total.toFixed(2)}`;
+    
+    document.getElementById("total").innerHTML = `R$ ${getTotal.toFixed(2)}`;
 }        
 
 function saveData(data) {
